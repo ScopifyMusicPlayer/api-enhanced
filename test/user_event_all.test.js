@@ -1,5 +1,5 @@
 const assert = require('assert')
-const userEventAll = require('../module/user_event_all')
+const userEventAll = require('../module/(user)/user_event_all')
 
 describe('all current user events module', () => {
   it('resolves the current user and aggregates every upstream page', async () => {

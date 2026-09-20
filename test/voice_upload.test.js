@@ -1,5 +1,5 @@
 const assert = require('assert')
-const voiceUpload = require('../module/voice_upload')
+const voiceUpload = require('../module/(voice)/voice_upload')
 
 function createVoiceUploadHarness(uploadPlugin) {
   const requestCalls = []

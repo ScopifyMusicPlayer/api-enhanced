@@ -33,5 +33,7 @@ after((done) => {
 })
 
 fs.readdirSync(path.join(__dirname, 'test')).forEach((file) => {
-  require(path.join(__dirname, 'test', file))
+  if (file.endsWith('.test.js')) {
+    require(path.join(__dirname, 'test', file))
+  }
 })
