@@ -3,7 +3,6 @@
 // 而是采用 standard, exhigh, lossless, hires, jyeffect(高清臻音), vivid(臻音全景声), jymaster(超清母带), sky(沉浸环绕声) 进行音质判断
 
 const createOption = require('../../util/option.js')
-const createOption = require('../../util/option.js')
 const { cookieToJson } = require('../../util/index.js')
 module.exports = (query, request) => {
   const data = {
