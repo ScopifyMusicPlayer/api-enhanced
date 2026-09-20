@@ -5,7 +5,5 @@ allowBuilds:
   core-js: true
   es5-ext: true
 
-onlyBuiltDependencies:
-  - core-js
-  - es5-ext
-
+minimumReleaseAgeExclude:
+  - '@neteasecloudmusicapienhanced/unblockmusic-utils@0.4.2'

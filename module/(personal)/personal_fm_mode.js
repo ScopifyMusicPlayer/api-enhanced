@@ -1,8 +1,4 @@
 // 私人FM - 模式选择
-
-// aidj, DEFAULT, FAMILIAR, EXPLORE, SCENE_RCMD ( EXERCISE, FOCUS, NIGHT_EMO  )
-// 来不及解释这几个了
-
 const createOption = require('../../util/option.js')
 module.exports = (query, request) => {
   const data = {
