@@ -951,6 +951,54 @@ tags: 歌单标签
 
 **调用例子 :** `/user/record?uid=32953014&type=1`
 
+### 获取乐迷团详情
+
+说明：传入乐迷团 ID，获取名称、头像、话题 ID（`topicId`）、看板 ID（`boardId`）等信息。原样返回上游响应，详情位于 `data.fansGroupInfo`。
+
+**必选参数：** `groupId`：乐迷团 ID，必须使用十进制字符串；不是用户 UID、歌手 ID、话题 ID 或看板 ID。Node.js 调用也应传字符串，避免长 ID 超出安全整数范围。
+
+**可选参数：** `scene`：上游场景参数，默认空字符串。
+
+**接口地址：** `/fans/group/detail`
+
+**调用例子：** `/fans/group/detail?groupId=1872529203038486609`
+
+Node.js 导出：`fans_group_detail({ groupId: '1872529203038486609' })`。
+
+### 获取乐迷团推荐笔记
+
+说明：获取指定乐迷团的推荐笔记，每次只读取一页。返回图文、音乐附件、作者与互动信息等原始字段；这是团内推荐内容，不是手机「笔记 → 推荐」的全站推荐接口，也不执行加入乐迷团、发布或点赞。
+
+**必选参数：** `fansGroupId`：乐迷团 ID，必须使用十进制字符串。未指定时返回 400，不预设任何团。
+
+**可选参数：**
+
+- `cursor`：字符串游标，第一页默认 `"0"`。下一页原样传入上一次响应的 `data.page.cursor`，不要转成数字或自行递增。
+- `size`：正整数，每页默认 10 条；传入值不保证等于实际返回数量，上游可能限制数量。
+
+**接口地址：** `/fans/group/feed/recommend`
+
+**调用例子：** `/fans/group/feed/recommend?fansGroupId=1872529203038486609&size=10&cursor=0`
+
+Node.js 导出：`fans_group_feed_recommend({ fansGroupId: '1872529203038486609', size: 10, cursor: '0' })`。
+
+**返回字段：**
+
+| 字段 | 含义 |
+| --- | --- |
+| `data.records` | 当前页原始笔记/动态记录 |
+| `data.records[].json` | JSON 字符串，可包含 `title`、`msg`、`song` 等内容 |
+| `data.records[].user`、`pics`、`info`、`threadId` | 作者、图片、互动计数和评论标识，按上游实际内容返回 |
+| `data.page.cursor` | 下一次请求使用的字符串游标 |
+| `data.page.more` | 是否还有后续内容 |
+| `data.page.size` | 上游返回的分页数量信息 |
+
+调用方应在 `more=false`、游标未前进或没有记录时停止加载，并按动态 ID 去重。本接口不会自动读取所有页或把多个团混成一页。
+
+两个接口默认使用 `https://interface3.music.163.com` 的 EAPI，沿用统一请求层的 Cookie、代理和超时设置。2026-09-25 匿名读取公开团样本成功；不保证所有团、所有会话都有相同可见范围。例子中的团仅供演示，调用方应使用实际选择的团 ID。
+
+协议参考：[乐迷团读接口公开实现](https://github.com/chaunsin/netease-cloud-music/blob/c3de358294d1c23443f1c541ee4a77d1b393388b/api/eapi/fansgroup.go)。
+
 ### 获取热门话题
 
 说明 : 调用此接口 , 可获取热门话题

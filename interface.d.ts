@@ -781,6 +781,48 @@ export function hot_topic(
   params: MultiPageConfig & RequestBaseConfig,
 ): Promise<Response>
 
+export interface FansGroupFeedResponse {
+  code: number
+  message?: string | null
+  data?: {
+    /** Raw note/event records, including json, user, pics, info and threadId. */
+    records: Record<string, unknown>[]
+    page: { cursor: string; more: boolean; size: number }
+    [key: string]: unknown
+  }
+}
+
+export function fans_group_feed_recommend(
+  params: {
+    /** Decimal string: group IDs can exceed JavaScript's safe integer range. */
+    fansGroupId: string
+    /** Opaque upstream cursor; use "0" for the first page. */
+    cursor?: string
+    size?: string | number
+  } & RequestBaseConfig,
+): Promise<Response<FansGroupFeedResponse>>
+
+export interface FansGroupDetailResponse {
+  code: number
+  message?: string | null
+  data?: {
+    fansGroupInfo: {
+      fansGroupId: string
+      fansGroupName: string
+      headAvatarUrl?: string
+      topicId?: string | null
+      boardId?: string | null
+      [key: string]: unknown
+    }
+    isNewPage?: boolean
+    [key: string]: unknown
+  }
+}
+
+export function fans_group_detail(
+  params: { groupId: string; scene?: string } & RequestBaseConfig,
+): Promise<Response<FansGroupDetailResponse>>
+
 export function inner_version(params: RequestBaseConfig): Promise<Response>
 
 export function like(
