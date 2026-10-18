@@ -7,6 +7,8 @@ const {
   generateDeviceId,
 } = require('./util/index')
 const { getXeapiPublicKey } = require('./util/xeapiKey')
+const { loadNeapiKey } = require('./util/neapiKey')
+const registerNeapikey = require('./module/register_neapikey')
 const tmpPath = require('os').tmpdir()
 
 async function generateConfig() {
@@ -45,6 +47,18 @@ async function generateConfig() {
     }
   } catch (error) {
     console.error('[Backend] Failed to register anonymous token:', error)
+  }
+  try {
+    const current = loadNeapiKey()
+    await registerNeapikey(
+      {
+        version: current ? current.version : 0,
+        behavior: current ? 'update' : 'open',
+      },
+      null,
+    )
+  } catch (error) {
+    console.log(error)
   }
 }
 module.exports = generateConfig
