@@ -38,9 +38,7 @@ moduleFiles.forEach((filePath) => {
 
   obj[fn] = function (data = {}) {
     const cookie =
-      typeof data.cookie === 'string'
-        ? cookieToJson(data.cookie)
-        : data.cookie || {}
+      typeof data.cookie === 'string' ? cookieToJson(data.cookie) : data.cookie
 
     return fileModule(
       {
