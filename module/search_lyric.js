@@ -3,7 +3,7 @@
 const createOption = require('../util/option.js')
 module.exports = (query, request) => {
   const data = {
-    keyword: query.keyword || query.keywords || '',
+    keyword: query.keyword || query.keywords || query.s || '',
     limit: query.limit || 30,
     offset: query.offset || 0,
   }

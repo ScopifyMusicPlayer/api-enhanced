@@ -22,4 +22,27 @@ describe('测试搜索是否正常', () => {
         done(err)
       })
   })
+
+  it('按歌词搜索 /search/lyric 应该能获取匹配歌词行与歌曲', (done) => {
+    const qs = {
+      keyword: '海阔天空',
+      realIP: global.cnIp,
+    }
+    axios
+      .get(`${host}/search/lyric`, {
+        params: qs,
+      })
+      .then(({ status, data }) => {
+        if (status === 200) {
+          assert(data.code === 200)
+          assert(Array.isArray(data.data.resources))
+          assert(data.data.resources.length > 0)
+          assert(typeof data.data.resources[0].matchedLyric === 'string')
+        }
+        done()
+      })
+      .catch((err) => {
+        done(err)
+      })
+  })
 })
