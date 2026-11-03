@@ -70,23 +70,34 @@ async function getModulesDefinitions(
   specificRoute,
   doRequire = true,
 ) {
-  const files = await fs.promises.readdir(modulesPath)
+  const walkModuleDir = async (dir) => {
+    const entries = await fs.promises.readdir(dir, { withFileTypes: true })
+    const files = []
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) {
+        files.push(...(await walkModuleDir(fullPath)))
+      } else if (entry.isFile() && entry.name.endsWith('.js')) {
+        files.push(fullPath)
+      }
+    }
+    return files
+  }
+  const files = await walkModuleDir(modulesPath)
   const parseRoute = (/** @type {string} */ fileName) =>
     specificRoute && fileName in specificRoute
       ? specificRoute[fileName]
       : `/${fileName.replace(/\.js$/i, '').replace(/_/g, '/')}`
 
-  const modules = files
-    .reverse()
-    .filter((file) => file.endsWith('.js'))
-    .map((file) => {
-      const identifier = file.split('.').shift()
-      const route = parseRoute(file)
-      const modulePath = path.join(modulesPath, file)
-      const module = doRequire ? require(modulePath) : modulePath
+  const modules = files.reverse().map((modulePath) => {
+    // Group directories organize source files without changing public URLs.
+    const file = path.basename(modulePath)
+    const identifier = file.split('.').shift()
+    const route = parseRoute(file)
+    const module = doRequire ? require(modulePath) : modulePath
 
-      return { identifier, route, module }
-    })
+    return { identifier, route, module }
+  })
 
   return modules
 }

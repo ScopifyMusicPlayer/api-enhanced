@@ -65,7 +65,7 @@ describe('Scopify consumed backend routes', () => {
     })
   })
 
-  it('registers every migrated route using the native flat module loader', async () => {
+  it('registers every migrated route using the recursive module loader', async () => {
     const definitions = await getModulesDefinitions(
       path.join(__dirname, '../module'),
       undefined,
@@ -82,7 +82,7 @@ describe('Scopify consumed backend routes', () => {
     )
     assert.ok(routes.has('/search/song/list/page'))
     assert.ok(!routes.has('/v1/search/song/pc'))
-    assert.ok(!routes.has('/token/fresh'))
+    assert.ok(routes.has('/token/fresh'))
     assert.ok(!routes.has('/v1/pc/page/rcmd/block/resource/refresh'))
     assert.ok(!routes.has('/v1/search/suggest/pc'))
   })
